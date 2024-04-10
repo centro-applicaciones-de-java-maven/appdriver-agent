@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="422.0" prefWidth="700.0" style="-fx-background-color: #3d3d3d;" stylesheets="@../java/org/guanzon/appdriver/agent/css/QuickSearch.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: black;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="6.0" layoutY="6.0" prefWidth="117.0" text="Kwik Search FX v1.0" textFill="#c6c6c6">
+               <font>
+                  <Font name="Arial Bold" size="12.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnExit" mnemonicParsing="false" onAction="#closeForm" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="8.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView fx:id="glyphExit" glyphName="TIMES" />
+               </graphic>
+            </Button>
+            <Separator prefHeight="0.0" prefWidth="422.0" style="-fx-background-color: orange;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <Pane layoutX="2.0" layoutY="30.0" prefHeight="59.0" prefWidth="700.0" style="-fx-background-color: #4d5656;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+         <children>
+            <Button fx:id="cmdLoad" alignment="CENTER" layoutX="545.0" layoutY="3.0" mnemonicParsing="false" onAction="#cmdLoad_Click" prefHeight="15.0" prefWidth="150.0" text="LOAD">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView glyphName="CALENDAR_CHECK_ALT" size="15" />
+               </graphic>
+            </Button>
+            <Button fx:id="cmdCancel" layoutX="545.0" layoutY="30.0" mnemonicParsing="false" onAction="#cmdCancel_Click" prefHeight="15.0" prefWidth="150.0" text="CANCEL">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+               <graphic>
+                  <FontAwesomeIconView glyphName="CLOSE" size="15" />
+               </graphic>
+            </Button>
+         </children>
+      </Pane>
+      <TableView fx:id="table" layoutX="2.0" layoutY="91.0" onMouseClicked="#table_click" prefHeight="325.0" prefWidth="695.0">
+        <columns>
+          <TableColumn prefWidth="58.0" text="C1" />
+          <TableColumn prefWidth="64.0" text="C2" />
+            <TableColumn prefWidth="66.0" text="Column X" />
+            <TableColumn prefWidth="77.0" text="Column X" />
+            <TableColumn prefWidth="69.0" text="Column X" />
+            <TableColumn prefWidth="83.0" text="Column X" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
