@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
 
 class QuickSearch extends Application {
     public static String pxeQuickSearch = "QuickSearchFX";
-    public static String pxeQuickSearchScreen = "QuickSearch.fxml";
+    public static String pxeQuickSearchScreen = "/QuickSearch.fxml";
     
     public void setGRider(GRider foGRider){this.poGRider = foGRider;};
     public void setResultSet(ResultSet foRecSource){this.poSource = foRecSource;}
