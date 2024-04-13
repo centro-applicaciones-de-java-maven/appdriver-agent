@@ -223,7 +223,7 @@ public class ShowDialogFX {
                 }
             }
             
-            loJSON.put("result", "success");
+            loJSON.put("result", "success");          
             loJSON.put("sUserIDxx", (String) lsUserIDxx);
             loJSON.put("sEmployID", (String) lsEmployID);
             loJSON.put("nUserLevl", (int) lnRights);
