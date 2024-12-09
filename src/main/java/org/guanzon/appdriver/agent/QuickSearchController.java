@@ -230,9 +230,9 @@ class QuickSearchController implements Initializable {
                     switch (paColHead.length){
                         case 4:
                             if (MiscUtil.RecordCount(poSource) > 25){
-                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.135)); break;
+                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.185)); break;
                             } else {
-                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.148)); break;
+                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.198)); break;
                             }
                         default:
                             index04.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
