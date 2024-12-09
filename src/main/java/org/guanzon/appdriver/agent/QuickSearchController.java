@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -34,8 +36,6 @@ class QuickSearchController implements Initializable {
     private ComboBox cmbField;
     @FXML
     private Button cmdLoad;
-    @FXML
-    private Button cmdCancel;
     @FXML
     private TableView<TableModel> table;
     @FXML
@@ -66,8 +66,9 @@ class QuickSearchController implements Initializable {
             cmbField.getSelectionModel().select(pnSort);
             txtSearch.setText(psCondition);
             
-            initGrid();
             executeQuery();
+            
+            Platform.runLater(() -> txtSearch.requestFocus());
         }
         pbActivated = !pbActivated;
     }    
@@ -87,12 +88,6 @@ class QuickSearchController implements Initializable {
 
     @FXML
     private void closeForm(ActionEvent event) {
-        pbCancelled = true;
-        unloadScene(event);
-    }
-    
-    @FXML
-    private void cmdCancel_Click(ActionEvent event) {
         pbCancelled = true;
         unloadScene(event);
     }
@@ -119,8 +114,37 @@ class QuickSearchController implements Initializable {
     }
     
     @FXML
+    private void txtSearch_KeyPressed(KeyEvent event) throws SQLException {
+        if (event.getCode() == KeyCode.F5){
+            loadData();
+        
+            pbCancelled = false;
+            unloadScene(event);
+        } else if (event.isControlDown() && event.getCode().toString().equals("DOWN")){
+            table.getSelectionModel().selectNext();
+            pnSelectd = table.getSelectionModel().getSelectedIndex();
+
+            if (pnSelectd >= 24){
+                table.scrollTo((int) pnSelectd - 23);
+            }
+        } else if (event.isControlDown() && event.getCode().toString().equals("UP")){
+            if (pnSelectd >= 0){
+                table.getSelectionModel().selectPrevious();
+                pnSelectd = table.getSelectionModel().getSelectedIndex();
+
+                if (pnSelectd >= 24){
+                    table.scrollTo((int) pnSelectd - 23);
+                } else {
+                    table.getSelectionModel().select((int) pnSelectd);
+                }
+            }            
+        } else{
+            executeQuery();
+        }
+    }
+    
+    @FXML
     private void txtSearch_Released(KeyEvent event) throws SQLException {
-        executeQuery();
     }
     
     private void initGrid(){
@@ -159,10 +183,6 @@ class QuickSearchController implements Initializable {
                     switch (paColHead.length){
                         case 1:
                             index01.prefWidthProperty().bind(table.widthProperty().multiply(1)); break;
-                        case 2:
-                        case 3:
-                        case 4:
-                            index01.prefWidthProperty().bind(table.widthProperty().multiply(0.25)); break;
                         default:
                             index01.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
                     }
@@ -173,7 +193,11 @@ class QuickSearchController implements Initializable {
                     
                     switch (paColHead.length){
                         case 2:
-                            index02.prefWidthProperty().bind(table.widthProperty().multiply(0.75)); break;
+                            if (MiscUtil.RecordCount(poSource) > 25){
+                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.735)); break;
+                            } else {
+                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.748)); break;
+                            }
                         case 3:
                             index02.prefWidthProperty().bind(table.widthProperty().multiply(0.50)); break;
                         case 4:
@@ -188,7 +212,11 @@ class QuickSearchController implements Initializable {
                     
                     switch (paColHead.length){
                         case 3:
-                            index03.prefWidthProperty().bind(table.widthProperty().multiply(0.25)); break;
+                            if (MiscUtil.RecordCount(poSource) > 25){
+                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.235)); break;
+                            } else {
+                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.248)); break;
+                            }
                         case 4:
                             index03.prefWidthProperty().bind(table.widthProperty().multiply(0.20)); break;
                         default:
@@ -197,20 +225,29 @@ class QuickSearchController implements Initializable {
                     break;
                 case 4:
                     index04.setText(paColHead[lnCtr -1]); table.getColumns().add(index04);
-                    index04.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
                     index04.setCellValueFactory(new PropertyValueFactory<TableModel,String>("index04"));
                     
                     switch (paColHead.length){
                         case 4:
-                            index04.prefWidthProperty().bind(table.widthProperty().multiply(0.15)); break;
+                            if (MiscUtil.RecordCount(poSource) > 25){
+                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.135)); break;
+                            } else {
+                                index04.prefWidthProperty().bind(table.widthProperty().multiply(0.148)); break;
+                            }
                         default:
                             index04.prefWidthProperty().bind(table.widthProperty().multiply(0.20));
                     }
                     break;
                 case 5: 
-                    index05.setText(paColHead[lnCtr -1]); table.getColumns().add(index05);
-                    index05.prefWidthProperty().bind(table.widthProperty().multiply(0.15));
-                    index05.setCellValueFactory(new PropertyValueFactory<TableModel,String>("index05")); break;
+                    index05.setText(paColHead[lnCtr -1]); table.getColumns().add(index05);                    
+                    index05.setCellValueFactory(new PropertyValueFactory<TableModel,String>("index05"));
+                    
+                    if (MiscUtil.RecordCount(poSource) > 25){
+                        index05.prefWidthProperty().bind(table.widthProperty().multiply(0.135));
+                    } else {
+                        index05.prefWidthProperty().bind(table.widthProperty().multiply(0.148));
+                    }
+                    break;
                 case 6: 
                     index06.setText(paColHead[lnCtr -1]); table.getColumns().add(index06);
                     index06.prefWidthProperty().bind(table.widthProperty().multiply(0.15));
@@ -285,6 +322,8 @@ class QuickSearchController implements Initializable {
         
         if (MiscUtil.RecordCount(poSource) > 0 ) poSource.beforeFirst();
         
+        initGrid();
+        
         while(poSource.next()){
             data.add(new TableModel((paFldName.length <= 0 ? "" : poSource.getString(paFldName[0])), 
                                     (paFldName.length <= 1 ? "" : poSource.getString(paFldName[1])), 
@@ -322,6 +361,12 @@ class QuickSearchController implements Initializable {
         }
 
         poJSON = loJSON;
+    }
+    
+    private void unloadScene(KeyEvent event){
+        Node source = (Node)  event.getSource(); 
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
     
     private void unloadScene(ActionEvent event){

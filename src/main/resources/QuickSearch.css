@@ -1,5 +1,5 @@
 .table-view{
-   -fx-background-color: transparent;
+   -fx-background-color: transparent;;
 }
 
 .table-view:focused{
@@ -7,40 +7,38 @@
 }
 
 .table-view .column-header-background{
-    -fx-background-color: #4d5656;
+    -fx-background-color: -fx-table-cell-border-color, #c9c6b8;
 }
 
 .table-view .column-header-background .label{
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+    -fx-text-fill: #000000;
 }
 
 .table-view .filler, .table-view .column-header {
     -fx-background-color: transparent;
-    -fx-size: 25px;
+    -fx-size: 23px;
 }
 
 .table-view .table-cell{
     -fx-text-fill: black;
     -fx-font-size: 12px;
     -fx-font-weight: 300;
-    -fx-font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    -fx-font-family: 'Open Sans','Helvetica Neue', Arial,sans-serif;
 }
 .table-row-cell{
-    -fx-background-color: -fx-table-cell-border-color, #D0D3D4;
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em; /* 0 */
-    -fx-cell-size: 25px;
+    -fx-background-color: -fx-table-cell-border-color, #f4f4f4;
+    -fx-padding: 0.0em;
+    -fx-cell-size: 23px;
 }
 
-/*.table-row-cell:odd{
-    -fx-background-color: -fx-table-cell-border-color, #424242;
-    -fx-background-insets: 0, 0 0 1 0;
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #e9e9e9;
     -fx-padding: 0.0em; 
-}*/
+}
 
 .table-row-cell:selected {
-    -fx-background-color: #B3B6B7;
+    -fx-background-color: #b4ccee;
     -fx-background-insets: 0;
     -fx-background-radius: 1;
 }
@@ -58,7 +56,7 @@
     -fx-border-width: 0px 0px 0px 5px;
     -fx-border-radius: 0px;
     -fx-background-radius: 0px;
-    -fx-background-color: #000000;
+    -fx-background-color: #293955;
 }
 
 #glyphExit{
@@ -66,5 +64,26 @@
 }
 
 #btnExit:hover #glyphExit{
-    -fx-fill: #f37021;
+    -fx-fill: #ffffff;
+}
+
+#anchorHeader{
+    -fx-background-color: #293955;
+    -fx-background-radius: 5 5 0 0;
+}
+
+#anchorTop{
+    -fx-background-color: #c4cdda;
+}
+
+#anchorBody{
+    -fx-background-color: #c4cdda;
+    -fx-background-radius: 0 0 5 5;
+    -fx-border: 5 5 5 5;
+}
+
+
+#AnchorPane #StackPane #BorderPane{
+    -fx-background-color: transparent;
+    -fx-background-radius: 5 5 0 0;
 }
