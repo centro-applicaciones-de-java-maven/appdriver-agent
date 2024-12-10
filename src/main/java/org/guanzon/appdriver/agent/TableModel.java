@@ -46,8 +46,8 @@ public class TableModel {
     public String getIndex06(){return index06.get();}
     public void setIndex06(String index06){this.index06.set(index06);}
     
-    public String getindex07(){return index07.get();}
-    public void setindex07(String index07){this.index07.set(index07);}
+    public String getIndex07(){return index07.get();}
+    public void setIndex07(String index07){this.index07.set(index07);}
     
     public String getindex08(){return index08.get();}
     public void setindex08(String index08){this.index08.set(index08);}

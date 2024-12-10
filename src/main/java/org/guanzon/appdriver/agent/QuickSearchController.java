@@ -194,9 +194,9 @@ class QuickSearchController implements Initializable {
                     switch (paColHead.length){
                         case 2:
                             if (MiscUtil.RecordCount(poSource) > 25){
-                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.735)); break;
+                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.785)); break;
                             } else {
-                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.748)); break;
+                                index02.prefWidthProperty().bind(table.widthProperty().multiply(0.798)); break;
                             }
                         case 3:
                             index02.prefWidthProperty().bind(table.widthProperty().multiply(0.50)); break;
@@ -213,9 +213,9 @@ class QuickSearchController implements Initializable {
                     switch (paColHead.length){
                         case 3:
                             if (MiscUtil.RecordCount(poSource) > 25){
-                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.235)); break;
+                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.285)); break;
                             } else {
-                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.248)); break;
+                                index03.prefWidthProperty().bind(table.widthProperty().multiply(0.298)); break;
                             }
                         case 4:
                             index03.prefWidthProperty().bind(table.widthProperty().multiply(0.20)); break;
