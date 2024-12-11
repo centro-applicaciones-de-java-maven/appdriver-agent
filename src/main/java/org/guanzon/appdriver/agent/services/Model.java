@@ -166,6 +166,8 @@ public class Model implements GEntity{
     public JSONObject newRecord() {
         poJSON = new JSONObject();
         
+        initialize();
+        
         setValue(ID, getNextCode());
 
         pnEditMode = EditMode.ADDNEW;

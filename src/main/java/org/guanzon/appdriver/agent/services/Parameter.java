@@ -165,6 +165,7 @@ public class Parameter implements GRecord{
     public JSONObject isEntryOkay() {
         poJSON = new JSONObject();
         poJSON.put("result", "success");
+        
         return poJSON;
     }
 }
