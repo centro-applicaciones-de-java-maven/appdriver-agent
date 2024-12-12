@@ -17,111 +17,112 @@ public class ShowDialogFX {
     /**
      * Browse records or transactions.
      * 
-     * @param foGRider - Application Driver
-     * @param foRS - ResultSet
-     * @param fsHeader - Column Headers separated by »
-     * @param fsColName - Column Names separated by »
+     * @param applicationDriver - Application Driver
+     * @param resultset - ResultSet
+     * @param columnHeaders - Column Headers separated by »
+     * @param columnLabels - Column Labels separated by »
      * @return result as success/failed and other information
      */
-    public static JSONObject Browse(GRider foGRider,
-                                        ResultSet foRS,
-                                        String fsHeader,
-                                        String fsColName){
+    public static JSONObject Browse(GRider applicationDriver,
+                                        ResultSet resultset,
+                                        String columnHeaders,
+                                        String columnLabels){
        
-        long lnRow = MiscUtil.RecordCount(foRS);
+        JSONObject loJSON = new JSONObject();
+        long lnRow = MiscUtil.RecordCount(resultset);
         
         if (lnRow == 1)
-            return CommonUtils.loadJSON(foRS);
+            return CommonUtils.loadJSON(resultset);
         else{
-            if (MiscUtil.RecordCount(foRS) >= 1){
+            if (MiscUtil.RecordCount(resultset) >= 1){
                 try {
-                    foRS.first();
+                    resultset.first();
                     
                     QuickSearch loSearch = new QuickSearch();
-                    loSearch.setGRider(foGRider);
-                    loSearch.setResultSet(foRS);
+                    loSearch.setGRider(applicationDriver);
+                    loSearch.setResultSet(resultset);
                     loSearch.setSQLSource("");
                     loSearch.setConditionValue("");
-                    loSearch.setColumnHeader(fsHeader);
-                    loSearch.setColunmName(fsColName);
+                    loSearch.setColumnHeader(columnHeaders);
+                    loSearch.setColunmName(columnLabels);
                     loSearch.setColumnCriteria("");
                     loSearch.setColumnIndex(-1);
 
                     CommonUtils.showModal(loSearch);
                     return loSearch.getJSON();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    loJSON.put("result", "error");
+                    loJSON.put("message", ex.getMessage());
+                    return loJSON;
                 }
             }         
         }
         
-        JSONObject loJSON = new JSONObject();
         loJSON.put("result", "error");
         loJSON.put("message", "Search has been cancelled or no record selected.");
-        
         return loJSON;
     }
     
     /**
      * Browse records or transactions.
      * 
-     * @param foJSON - Array of values in JSONArray format.
-     * @param fsHeader - Column Headers separated by »
-     * @param fsColName - Column Names separated by »
+     * @param jsonResult - Array of values in JSONArray format.
+     * @param columnHeaders - Column Headers separated by »
+     * @param columnLabels - Column Names separated by »
      * @return result as success/failed and other information
      */
-    public static JSONObject Browse(JSONArray foJSON,
-                                        String fsHeader,
-                                        String fsColName){    
+    public static JSONObject Browse(JSONArray jsonResult,
+                                    String columnHeaders,
+                                    String columnLabels){    
                                         
+        JSONObject loJSON = new JSONObject();
+        
         try {
             JSONBrowse instance = new JSONBrowse();
         
-            instance.setData(foJSON);
-            instance.setColumnHeader(fsHeader);
-            instance.setColunmName(fsColName);
+            instance.setData(jsonResult);
+            instance.setColumnHeader(columnHeaders);
+            instance.setColunmName(columnLabels);
             
             CommonUtils.showModal(instance);
             return instance.getJSON();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            loJSON.put("result", "error");
+            loJSON.put("message", ex.getMessage());
+            return loJSON;
         }
-        
-        JSONObject loJSON = new JSONObject();
-        loJSON.put("result", "error");
-        loJSON.put("message", "Search has been cancelled or no record selected.");
-        
-        return loJSON;
     }
     
     /**
      * Search records or transactions.
      * 
-     * @param foGRider - Application Driver
-     * @param fsSQL - SQL Query used for searching
-     * @param fsValue - SQL Condition
-     * @param fsHeader - Column Headers separated by »
-     * @param fsColName - Column Names separated by »
-     * @param fsColCrit - Column Criteria separated by »
-     * @param fnSort - Column Index used for sorting results
+     * @param applicationDriver - Application Driver
+     * @param sqlStatement - SQL Statement
+     * @param conditionValue - Condition Value
+     * @param columnHeaders - Column Headers separated by »
+     * @param columnLabels - Column Labels separated by »
+     * @param columnCriterias - Column Criteria separated by »
+     * @param sortIndex - Column Index used for sorting results
      * @return result as success/failed and other information
      */
-    public static JSONObject Search(GRider foGRider,
-                                        String fsSQL,
-                                        String fsValue,
-                                        String fsHeader,
-                                        String fsColName,
-                                        String fsColCrit,
-                                        int fnSort){
+    public static JSONObject Search(GRider applicationDriver,
+                                        String sqlStatement,
+                                        String conditionValue,
+                                        String columnHeaders,
+                                        String columnLabels,
+                                        String columnCriterias,
+                                        int sortIndex){
         
-        String [] laSplit = fsColCrit.split("»");
+        JSONObject loJSON = new JSONObject();
+        
+        String [] laSplit = columnCriterias.split("»");
         String lsCondition;
                 
-        lsCondition = laSplit[fnSort] + " LIKE " + SQLUtil.toSQL(fsValue + "%");
-        fsSQL = MiscUtil.addCondition(fsSQL, lsCondition);
+        lsCondition = laSplit[sortIndex] + " LIKE " + SQLUtil.toSQL(conditionValue + "%");
+        sqlStatement = MiscUtil.addCondition(sqlStatement, lsCondition);
         
         try {
-            ResultSet loRS = foGRider.executeQuery(fsSQL);
+            ResultSet loRS = applicationDriver.executeQuery(sqlStatement);
                 
             if (MiscUtil.RecordCount(loRS) == 1) return CommonUtils.loadJSON(loRS);
 
@@ -129,38 +130,40 @@ public class ShowDialogFX {
                 loRS.first();
 
                 QuickSearch loSearch = new QuickSearch();
-                loSearch.setGRider(foGRider);
+                loSearch.setGRider(applicationDriver);
                 loSearch.setResultSet(loRS);
-                loSearch.setSQLSource(fsSQL);
-                loSearch.setConditionValue(fsValue);
-                loSearch.setColumnHeader(fsHeader);
-                loSearch.setColunmName(fsColName);
-                loSearch.setColumnCriteria(fsColCrit);
-                loSearch.setColumnIndex(fnSort);
+                loSearch.setSQLSource(sqlStatement);
+                loSearch.setConditionValue(conditionValue);
+                loSearch.setColumnHeader(columnHeaders);
+                loSearch.setColunmName(columnLabels);
+                loSearch.setColumnCriteria(columnCriterias);
+                loSearch.setColumnIndex(sortIndex);
 
                 CommonUtils.showModal(loSearch);
                 return loSearch.getJSON();   
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            loJSON.put("result", "error");
+            loJSON.put("message", ex.getMessage());
+            return loJSON;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            loJSON.put("result", "error");
+            loJSON.put("message", ex.getMessage());
+            return loJSON;
         }
-            
-        JSONObject loJSON = new JSONObject();
+        
         loJSON.put("result", "error");
         loJSON.put("message", "Search has been cancelled or no record selected.");
-        
         return loJSON;
     }
     
     /**
      * System Approval
      * 
-     * @param foGRider Application Driver
+     * @param applicationDriver Application Driver
      * @return result as success/failed and other information
      */
-    public static JSONObject getUserApproval(GRider foGRider){
+    public static JSONObject getUserApproval(GRider applicationDriver){
         JSONObject loJSON = new JSONObject();
         String [] arr = new String [2];
         
@@ -178,16 +181,16 @@ public class ShowDialogFX {
                 return loJSON;
             }
 
-            arr[0] = foGRider.Encrypt(arr[0]);
-            arr[1] = foGRider.Encrypt(arr[1]);
+            arr[0] = applicationDriver.Encrypt(arr[0]);
+            arr[1] = applicationDriver.Encrypt(arr[1]);
 
             String lsSQL = "SELECT * FROM xxxSysUser" + 
                             " WHERE sLogNamex = " + SQLUtil.toSQL(arr[0]) +
                                 " AND sPassword = " + SQLUtil.toSQL(arr[1]) +
                                 " AND (cUserType = '1' OR sProdctID = " + 
-                                        SQLUtil.toSQL(foGRider.getProductID()) + ")";
+                                        SQLUtil.toSQL(applicationDriver.getProductID()) + ")";
 
-            ResultSet loRS = foGRider.executeQuery(lsSQL);
+            ResultSet loRS = applicationDriver.executeQuery(lsSQL);
 
             String lsUserIDxx;
             String lsEmployID;
@@ -216,7 +219,7 @@ public class ShowDialogFX {
             }
             
             if (loRS.getString("cUserType").equals(UserType.LOCAL)){
-                if (!loRS.getString("sProdctID").equalsIgnoreCase(foGRider.getProductID())){
+                if (!loRS.getString("sProdctID").equalsIgnoreCase(applicationDriver.getProductID())){
                     loJSON.put("result", "error");
                     loJSON.put("message", "User has no Rights for Procedure Approval!!!");
                     return loJSON;
@@ -229,7 +232,6 @@ public class ShowDialogFX {
             loJSON.put("nUserLevl", (int) lnRights);
             return loJSON;
         } catch (Exception ex) {
-            ex.printStackTrace();
             loJSON.put("result", "error");
             loJSON.put("message", ex.getMessage());
             return loJSON;
@@ -239,11 +241,12 @@ public class ShowDialogFX {
     /**
      * System Approval
      * 
-     * @param foGRider Application Driver
-     * @param foStage FX Stage
+     * @param applicationDriver Application Driver
+     * @param stage FX Stage
      * @return result as success/failed and other information
      */
-    public static JSONObject getUserApproval(GRider foGRider, Stage foStage){
+    public static JSONObject getUserApproval(GRider applicationDriver, 
+                                                Stage stage){
         JSONObject loJSON = new JSONObject();
         String [] arr = new String [2];
         
@@ -261,16 +264,16 @@ public class ShowDialogFX {
                 return loJSON;
             }
 
-            arr[0] = foGRider.Encrypt(arr[0]);
-            arr[1] = foGRider.Encrypt(arr[1]);
+            arr[0] = applicationDriver.Encrypt(arr[0]);
+            arr[1] = applicationDriver.Encrypt(arr[1]);
 
             String lsSQL = "SELECT * FROM xxxSysUser" + 
                             " WHERE sLogNamex = " + SQLUtil.toSQL(arr[0]) +
                                 " AND sPassword = " + SQLUtil.toSQL(arr[1]) +
                                 " AND (cUserType = '1' OR sProdctID = " + 
-                                        SQLUtil.toSQL(foGRider.getProductID()) + ")";
+                                        SQLUtil.toSQL(applicationDriver.getProductID()) + ")";
 
-            ResultSet loRS = foGRider.executeQuery(lsSQL);
+            ResultSet loRS = applicationDriver.executeQuery(lsSQL);
 
             String lsUserIDxx;
             String lsEmployID;
@@ -299,7 +302,7 @@ public class ShowDialogFX {
             }
             
             if (loRS.getString("cUserType").equals(UserType.LOCAL)){
-                if (!loRS.getString("sProdctID").equalsIgnoreCase(foGRider.getProductID())){
+                if (!loRS.getString("sProdctID").equalsIgnoreCase(applicationDriver.getProductID())){
                     loJSON.put("result", "error");
                     loJSON.put("message", "User has no Rights for Procedure Approval!!!");
                     return loJSON;
@@ -312,7 +315,6 @@ public class ShowDialogFX {
             loJSON.put("nUserLevl", (int) lnRights);
             return loJSON;
         } catch (Exception ex) {
-            ex.printStackTrace();
             loJSON.put("result", "error");
             loJSON.put("message", ex.getMessage());
             return loJSON;
