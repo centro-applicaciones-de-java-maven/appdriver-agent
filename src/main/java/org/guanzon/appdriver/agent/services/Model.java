@@ -32,7 +32,7 @@ public class Model implements GEntity{
         xmlFileName = xmlFileName.replace(".xml", "");
         
         XML = xmlFileName + ".xml";
-        logwrapr = new LogWrapper(xmlFileName, "cas-error.log");
+        logwrapr = new LogWrapper(xmlFileName, System.getProperty("sys.default.path.temp") + "cas-error.log");
     }
     
     public void setTableName(String tableName){
