@@ -32,11 +32,14 @@ public class Model implements GEntity{
         xmlFileName = xmlFileName.replace(".xml", "");
         
         XML = xmlFileName + ".xml";
-        logwrapr = new LogWrapper(xmlFileName, System.getProperty("sys.default.path.temp") + "cas-error.log");
     }
     
     public void setTableName(String tableName){
         TABLE = tableName;
+    }
+    
+    public void setLogWrapper(LogWrapper logWrapper){
+        logwrapr = logWrapper;
     }
     
     public void initialize() {
@@ -57,7 +60,7 @@ public class Model implements GEntity{
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
             System.exit(1);
         }
     }
@@ -67,7 +70,7 @@ public class Model implements GEntity{
         try {
             return poEntity.getMetaData().getColumnLabel(columnIndex);
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
         }
         return "";
     }
@@ -77,7 +80,7 @@ public class Model implements GEntity{
         try {
             return MiscUtil.getColumnIndex(poEntity, columnName);
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
         }
         return -1;
     }
@@ -87,7 +90,7 @@ public class Model implements GEntity{
         try {
             return poEntity.getMetaData().getColumnCount();
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
         }
 
         return -1;
@@ -108,7 +111,7 @@ public class Model implements GEntity{
         try {
             return poEntity.getObject(columnIndex);
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
         }
         return null;
     }
@@ -118,7 +121,7 @@ public class Model implements GEntity{
         try {
             return poEntity.getObject(MiscUtil.getColumnIndex(poEntity, columnName));
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
         }
         return null;
     }
@@ -138,7 +141,7 @@ public class Model implements GEntity{
             poJSON.put("result", "success");
             poJSON.put("value", getValue(columnIndex));
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
             poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
@@ -154,7 +157,7 @@ public class Model implements GEntity{
         try {
             return setValue(MiscUtil.getColumnIndex(poEntity, colunmName), value);
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
             poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
@@ -206,7 +209,7 @@ public class Model implements GEntity{
                 poJSON.put("message", "No record to load.");
             }
         } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
+            logError(getCurrentMethodName() + "»" + e.getMessage());
             poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
@@ -319,5 +322,17 @@ public class Model implements GEntity{
     
     public String getNextCode(){
         return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getConnection(), ""); 
+    }
+    
+    private void logError(String message){
+        message = this.getClass().getSimpleName() + " : " + message;
+        
+        if (logwrapr == null) System.err.println(message);
+        else logwrapr.severe(message);
+    }
+    
+    private String getCurrentMethodName() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        return stackTrace[2].getMethodName();
     }
 }

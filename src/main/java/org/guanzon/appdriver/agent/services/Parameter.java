@@ -1,6 +1,7 @@
 package org.guanzon.appdriver.agent.services;
 
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
@@ -8,6 +9,8 @@ import org.guanzon.appdriver.iface.GRecord;
 import org.json.simple.JSONObject;
 
 public class Parameter implements GRecord{
+    protected LogWrapper logwrapr;
+    
     protected GRider poGRider;
     protected boolean pbWthParent;
     protected String psRecdStat;
@@ -20,6 +23,10 @@ public class Parameter implements GRecord{
     
     public void setWithParentClass(boolean withParentClass){
         pbWthParent = withParentClass;
+    }
+    
+    public void setLogWrapper(LogWrapper logWrapper){
+        logwrapr = logWrapper;
     }
     
     public void initialize() {
