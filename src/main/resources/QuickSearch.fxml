@@ -24,13 +24,13 @@
                <top>
                   <AnchorPane id="anchorHeader" prefHeight="30.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <FontAwesomeIconView fill="WHITE" glyphName="SEARCH" size="14" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="SEARCH" size="18" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                         <Label alignment="CENTER" layoutX="6.0" layoutY="6.0" prefHeight="15.0" text="G-Search" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="5.0">
                            <font>
                               <Font name="SansSerif Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnExit" mnemonicParsing="false" onAction="#closeForm" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                        <Button fx:id="btnExit" mnemonicParsing="false" onAction="#closeForm" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="8.0" />
                            </font>
