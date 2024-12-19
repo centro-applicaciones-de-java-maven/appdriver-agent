@@ -48,8 +48,8 @@ public class Parameter implements GRecord{
     }
 
     @Override
-    public JSONObject openRecord(String provinceId) {
-        return getModel().openRecord(provinceId);
+    public JSONObject openRecord(String Id) {
+        return getModel().openRecord(Id);
     }
 
     @Override
