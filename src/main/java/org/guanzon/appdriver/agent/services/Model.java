@@ -16,8 +16,9 @@ public class Model implements GEntity{
     protected LogWrapper logwrapr;
     
     protected String XML;
-    protected String ID;
     protected String TABLE;
+    protected String ID = "";
+    protected String ID2 = "";
     
     protected GRider poGRider;
     protected CachedRowSet poEntity;
@@ -171,7 +172,7 @@ public class Model implements GEntity{
         
         initialize();
         
-        setValue(ID, getNextCode());
+        if (ID2.isEmpty()) setValue(ID, getNextCode());
 
         pnEditMode = EditMode.ADDNEW;
         poJSON.put("result", "success");
@@ -187,6 +188,46 @@ public class Model implements GEntity{
 
         //replace the condition based on the primary key column of the record
         lsSQL = MiscUtil.addCondition(lsSQL, ID + " = " + SQLUtil.toSQL(id));
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+
+        try {
+            if (loRS.next()) {
+                for (int lnCtr = 1; lnCtr <= loRS.getMetaData().getColumnCount(); lnCtr++) {
+                    setValue(lnCtr, loRS.getObject(lnCtr));
+                }
+                
+                MiscUtil.close(loRS);
+
+                pnEditMode = EditMode.READY;
+
+                poJSON = new JSONObject();
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+            } else {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record to load.");
+            }
+        } catch (SQLException e) {
+            logError(getCurrentMethodName() + "»" + e.getMessage());
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+
+        return poJSON;
+    }
+    
+    @Override
+    public JSONObject openRecord(String Id1, Object Id2) {
+        poJSON = new JSONObject();
+
+        String lsSQL = MiscUtil.makeSelect(this);
+
+        //replace the condition based on the primary key column of the record
+        lsSQL = MiscUtil.addCondition(lsSQL, ID + " = " + SQLUtil.toSQL(Id1) +
+                                                " AND " + ID2 + " = " + SQLUtil.toSQL(Id2));
 
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
@@ -242,7 +283,7 @@ public class Model implements GEntity{
             
             if (pnEditMode == EditMode.ADDNEW) {
                 //replace with the primary key column info
-                setValue(ID, getNextCode());
+                if (ID2.isEmpty()) setValue(ID, getNextCode());
 
                 lsSQL = MiscUtil.makeSQL(this);
 
@@ -273,8 +314,13 @@ public class Model implements GEntity{
 
                 if ("success".equals((String) poJSON.get("result"))) {
                     //replace the condition based on the primary key column of the record
-                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, ID + " = " + SQLUtil.toSQL(this.getValue(ID)));
-
+                    if (ID2.isEmpty()){
+                        lsSQL = MiscUtil.makeSQL(this, loOldEntity, ID + " = " + SQLUtil.toSQL(this.getValue(ID)));
+                    } else {
+                        lsSQL = MiscUtil.makeSQL(this, loOldEntity, ID + " = " + SQLUtil.toSQL(this.getValue(ID)) +
+                                                                                        " AND " + ID2 + " = " + SQLUtil.toSQL(this.getValue(ID2)));
+                    }
+                    
                     if (!lsSQL.isEmpty()) {
                         if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
                             poJSON = new JSONObject();
